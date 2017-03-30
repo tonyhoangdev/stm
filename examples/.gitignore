@@ -1,0 +1,12 @@
+# IAR Files
+**/*.xcl
+**/*.bat
+**/*.dep
+**/settings/
+**/Debug/
+**/Release/
+
+# Others
+**/*.map
+**/*.elf
+**/*.o
