@@ -1,0 +1,12 @@
+;	STMicroelectronics Workspace file
+
+[Version]
+Keyword=ST7Workspace-V0.7
+
+[Project0]
+Filename=blinking_led_mkf.stp
+Dependencies=
+[Options]
+ActiveProject=blinking_led_mkf
+ActiveConfig=Debug
+AddSortedElements=1

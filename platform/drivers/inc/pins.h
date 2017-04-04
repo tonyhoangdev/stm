@@ -57,36 +57,12 @@
 #define PF6 46U
 #define PF7 47U
 
-static GPIO_Type * s_gpioBasePtr[] = GPIO_BASE_PTRS;
+extern GPIO_Type * g_gpioBasePtr[GPIO_INSTANCE_COUNT];
 
-static inline void GPIO_DDR(uint8_t pin, uint8_t value)
-{
-    s_gpioBasePtr[pin/8U]->DDR &= ~(1U << (pin % 8));
-    s_gpioBasePtr[pin/8U]->DDR |= value << (pin % 8);
-}
-
-static inline void GPIO_CR1(uint8_t pin, uint8_t value)
-{
-    s_gpioBasePtr[pin/8U]->CR1 &= ~(1U << (pin % 8));
-    s_gpioBasePtr[pin/8U]->CR1 |= value << (pin % 8);
-}
-
-static inline void GPIO_CR2(uint8_t pin, uint8_t value)
-{
-    s_gpioBasePtr[pin/8U]->CR2 &= ~(1U << (pin % 8));
-    s_gpioBasePtr[pin/8U]->CR2 |= value << (pin % 8);
-}
-
-static inline void GPIO_ODR(uint8_t pin, uint8_t value)
-{
-    s_gpioBasePtr[pin/8U]->ODR &= ~(1U << (pin % 8));
-    s_gpioBasePtr[pin/8U]->ODR |= value << (pin % 8);
-}
-
-static inline uint8_t GPIO_IDR(uint8_t pin)
-{
-    uint8_t shift = 1U << (pin % 8);
-    return (s_gpioBasePtr[pin/8U]->DDR & shift) >> shift;
-}
+void GPIO_DDR(uint8_t pin, uint8_t value);
+void GPIO_CR1(uint8_t pin, uint8_t value);
+void GPIO_CR2(uint8_t pin, uint8_t value);
+void GPIO_ODR(uint8_t pin, uint8_t value);
+uint8_t GPIO_IDR(uint8_t pin);
 
 #endif
