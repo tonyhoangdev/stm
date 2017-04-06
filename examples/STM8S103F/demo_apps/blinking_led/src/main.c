@@ -2,13 +2,13 @@
 
 #define PIN_LED2    PB5
 
-//
-void delay(volatile unsigned int n)
+// stm8: unsigned int = 2 Bytes
+void delay(volatile uint16_t time)
 {
-    while (n --> 0);
+    while (time --> 0U);
 }
 
-//
+// main
 int main( void )
 {
     GPIO_DDR(PIN_LED2, 1);
@@ -16,11 +16,14 @@ int main( void )
     GPIO_CR2(PIN_LED2, 1);
     GPIO_ODR(PIN_LED2, 0);
 
+    // 100 ms
+    uint32_t time = 17000U;
+
     while (1)
     {
         GPIO_ODR(PIN_LED2, 1);
-        delay(720000);
+        delay(time);
         GPIO_ODR(PIN_LED2, 0);
-        delay(720000);
+        delay(time);
     }
 }
