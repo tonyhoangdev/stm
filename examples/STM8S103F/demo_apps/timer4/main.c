@@ -52,14 +52,11 @@ void main(void)
     /* TIM4 configuration -----------------------------------------*/
     TIM4_Config();
 
-    // 100 ms
-    uint32_t time = 17000U;
-
     /* Infinite loop */
     while (1)
     {
         GPIO_WriteReverse(GPIOB, GPIO_PIN_5);
-        delay(2000);
+        delay(600);
     }
 
 }
