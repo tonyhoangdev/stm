@@ -34,8 +34,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint32_t TIM1ClockFreq = 2000000;
-__IO uint32_t LSIClockFreq = 0;
-uint16_t ICValue1 =0, ICValue2 =0, ICValue3 = 0;
+__IO uint32_t LSIClockFreq = 0, duty = 0;
+uint16_t ICValue1 =0, ICValue2 =0, ICValue3 = 0, ICValue4 = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void TIM1_Config(void);
@@ -45,14 +45,15 @@ void main(void)
 {
     /* Connect LSI to COO pin*/
     GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_PP_LOW_FAST);
-    CLK_CCOConfig(CLK_OUTPUT_CPUDIV64);
-    CLK_CCOCmd(ENABLE);
+    //CLK_CCOConfig(CLK_OUTPUT_CPUDIV32);
+    //CLK_CCOCmd(ENABLE);
 
     /* TIM1 configuration -----------------------------------------*/
     TIM1_Config();
 
     /* Compute LSI clock frequency */
     LSIClockFreq = (8 * TIM1ClockFreq) / (ICValue2 - ICValue1);
+    duty = 100 * (ICValue3 - ICValue1) / (ICValue2 - ICValue1);
 
     /* Infinite loop */
     while (1)
@@ -66,29 +67,39 @@ static void TIM1_Config(void)
     TIM1_ICInit(TIM1_CHANNEL_3, TIM1_ICPOLARITY_FALLING, TIM1_ICSELECTION_DIRECTTI,
                 TIM1_ICPSC_DIV8, 0x0);
 
+    TIM1_ICInit(TIM1_CHANNEL_4, TIM1_ICPOLARITY_RISING, TIM1_ICSELECTION_DIRECTTI,
+                TIM1_ICPSC_DIV8, 0x0);
+
     /* Enable TIM1 */
     TIM1_Cmd(ENABLE);
 
     /* Clear CC1 Flag*/
     TIM1_ClearFlag(TIM1_FLAG_CC3);
+    TIM1_ClearFlag(TIM1_FLAG_CC4);
 
     /* wait a capture on CC4 */
-    while((TIM1->SR1 & TIM1_FLAG_CC3) != TIM1_FLAG_CC3);
+    while(!TIM1_GetFlagStatus(TIM1_FLAG_CC3));
     /* Get CCR1 value*/
     ICValue1 = TIM1_GetCapture3();
     TIM1_ClearFlag(TIM1_FLAG_CC3);
 
+    /* wait a capture on CC4 */
+    while(!TIM1_GetFlagStatus(TIM1_FLAG_CC4));
+    /* Get CCR1 value*/
+    ICValue3 = TIM1_GetCapture4();
+    TIM1_ClearFlag(TIM1_FLAG_CC4);
+
     /* wait a capture on cc1 */
-    while((TIM1->SR1 & TIM1_FLAG_CC3) != TIM1_FLAG_CC3);
+    while(!TIM1_GetFlagStatus(TIM1_FLAG_CC3));
     /* Get CCR1 value*/
     ICValue2 = TIM1_GetCapture3();
     TIM1_ClearFlag(TIM1_FLAG_CC3);
 
     /* wait a capture on cc1 */
-    while((TIM1->SR1 & TIM1_FLAG_CC3) != TIM1_FLAG_CC3);
+    while(!TIM1_GetFlagStatus(TIM1_FLAG_CC4));
     /* Get CCR1 value*/
-    ICValue3 = TIM1_GetCapture3();
-    TIM1_ClearFlag(TIM1_FLAG_CC3);
+    ICValue4 = TIM1_GetCapture4();
+    TIM1_ClearFlag(TIM1_FLAG_CC4);
 }
 
 #ifdef USE_FULL_ASSERT

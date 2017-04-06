@@ -227,9 +227,7 @@ INTERRUPT_HANDLER(SPI_IRQHandler, 10)
  */
 INTERRUPT_HANDLER(TIM1_UPD_OVF_TRG_BRK_IRQHandler, 11)
 {
-    /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-     */
+
 }
 
 /**
